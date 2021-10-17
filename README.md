@@ -21,7 +21,7 @@ Additional software:
 - Xdebug
 - NodeJS
 - Blackfire
-- Command-line clients for MySQL and PostgreSQL for misgration squashing
+- Command-line clients for MySQL and PostgreSQL for migration squashing
 - htop
 - GNU nano
 
