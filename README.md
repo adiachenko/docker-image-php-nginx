@@ -6,7 +6,6 @@
   - [Usage](#usage)
     - [Production Usage](#production-usage)
     - [Cron Schedule](#cron-schedule)
-    - [Laravel Octane](#laravel-octane)
   - [Configuration](#configuration)
   - [Creating Images](#creating-images)
 
@@ -15,7 +14,7 @@
 This image is based on official PHP-FPM Docker image.
 
 Additional software:
-- Nginx (with pre-made configs for Laravel, Laravel Octane, Symfony and Wordpress)
+- Nginx (with pre-made configs for Laravel, Symfony and Wordpress)
 - SQLite
 - Composer
 - Xdebug
@@ -102,7 +101,6 @@ services:
 You can set Nginx config suited for your framework using `NGINX_SERVER_TYPE` env variable (container restart required):
 
 - laravel
-- octane
 - symfony
 - wordpress
 
@@ -145,36 +143,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 ```
 
-### Laravel Octane
-
-> This image only supports Roadrunner server.
-
-Octane runs as PHP CLI application so we must adjust `docker-compose.yml` file accordingly:
-
-```yml
-version: '3.8'
-
-services:
-  app:
-    image: adiachenko/php-nginx
-    # Run the image without PHP-FPM
-    command: >
-      bash -c "envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/sites-available/default && nginx"
-    environment:
-      - NGINX_SERVER_TYPE=octane
-      - PHP_OPCACHE_ENABLE_CLI=1
-    ports:
-      - 8000:80
-    volumes:
-      - ./:/opt/project:cached
-```
-
-When starting Octane, you must specify correct host and port:
-
-```
-docker-compose exec app php artisan octane:start --port=9000
-```
-
 ## Configuration
 
 This image ships with the default php.ini for production environments.
@@ -196,7 +164,6 @@ It is recommended that you change configuration using the following environment 
 | PHP_UPLOAD_MAX_SIZE                 | 2M                                |
 | PHP_REALPATH_CACHE_SIZE             | 4K                                |
 | PHP_REALPATH_CACHE_TTL              | 120                               |
-| PHP_OPCACHE_ENABLE_CLI              | 0                                 |
 | PHP_OPCACHE_MEMORY_CONSUMPTION      | 128                               |
 | PHP_OPCACHE_INTERNED_STRINGS_BUFFER | 8                                 |
 | PHP_OPCACHE_MAX_ACCELERATED_FILES   | 10000                             |
@@ -211,13 +178,11 @@ It is recommended that you change configuration using the following environment 
 Build images:
 
 ```sh
-docker build --no-cache -t adiachenko/php-nginx:8.0 .
-docker build -t adiachenko/php-nginx:latest .
+docker build --no-cache -t adiachenko/php-nginx:7.4 .
 ```
 
 Push images to Docker Hub:
 
 ```
-docker push adiachenko/php-nginx:8.0
-docker push adiachenko/php-nginx:latest
+docker push adiachenko/php-nginx:7.4
 ```
