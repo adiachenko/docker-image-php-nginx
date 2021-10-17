@@ -198,6 +198,7 @@ It is recommended that you change configuration using the following environment 
 | PHP_REALPATH_CACHE_TTL              | 120                               |
 | PHP_OPCACHE_ENABLE_CLI              | 0                                 |
 | PHP_OPCACHE_MEMORY_CONSUMPTION      | 128                               |
+| PHP_OPCACHE_JIT_BUFFER_SIZE         | 0                                 |
 | PHP_OPCACHE_INTERNED_STRINGS_BUFFER | 8                                 |
 | PHP_OPCACHE_MAX_ACCELERATED_FILES   | 10000                             |
 | PHP_OPCACHE_MAX_WASTED_PERCENTAGE   | 5                                 |
