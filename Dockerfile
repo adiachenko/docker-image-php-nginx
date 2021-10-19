@@ -33,8 +33,6 @@ ENV PHP_XDEBUG_CLIENT_HOST ${PHP_XDEBUG_CLIENT_HOST:-host.docker.internal}
 # Disable Composer memory limit to avoid potential issues with composer update
 ENV COMPOSER_MEMORY_LIMIT -1
 
-# ENV NGINX_BACKEND_HOST ${NGINX_BACKEND_HOST:-php}
-ENV NGINX_BACKEND_PORT ${NGINX_BACKEND_PORT:-9000}
 # Define env variables for Nginx configuration
 ENV NGINX_SERVER_TYPE ${NGINX_SERVER_TYPE:-laravel}
 
