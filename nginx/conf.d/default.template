@@ -1,5 +1,1 @@
-upstream backend {
-    server 127.0.0.1:9000;
-}
-
-include /etc/nginx/conf.d/boilerplates/${NGINX_SERVER_TYPE}.conf;
+include /etc/nginx/conf.d/stubs/${NGINX_SERVER_TYPE}.conf;

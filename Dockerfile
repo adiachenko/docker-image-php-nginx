@@ -94,9 +94,12 @@ COPY nginx/conf.d/ /etc/nginx/conf.d/
 # Copy over Supervisor configuration
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-WORKDIR /opt/project
+# Ensure nginx is properly passing to php-fpm and fpm is responding
+HEALTHCHECK --interval=5s --timeout=3s \
+  CMD curl -f http://localhost/php-fpm-ping || exit 1
 
-EXPOSE 80 9000
+WORKDIR /opt/project
+EXPOSE 80
 
 CMD envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/sites-available/default \
   && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
