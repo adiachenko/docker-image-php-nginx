@@ -169,12 +169,6 @@ services:
       - ./:/opt/project:cached
 ```
 
-When starting Octane, you must specify correct host and port:
-
-```
-docker-compose exec app php artisan octane:start --port=9000
-```
-
 ## Configuration
 
 This image ships with the default php.ini for production environments.
