@@ -22,7 +22,7 @@ Additional software:
 - Xdebug
 - NodeJS
 - Blackfire
-- Command-line clients for MySQL and PostgreSQL for migration squashing
+- Command-line clients for MySQL and PostgreSQL to support [migration squashing](https://laravel.com/docs/8.x/migrations#squashing-migrations)
 - htop
 - GNU nano
 
