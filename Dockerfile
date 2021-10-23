@@ -24,6 +24,13 @@ ENV PHP_OPCACHE_MAX_WASTED_PERCENTAGE ${PHP_OPCACHE_MAX_WASTED_PERCENTAGE:-5}
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS ${PHP_OPCACHE_VALIDATE_TIMESTAMPS:-1}
 ENV PHP_OPCACHE_SAVE_COMMENTS ${PHP_OPCACHE_SAVE_COMMENTS:-1}
 
+# Define env variables for FPM settings
+ENV PHP_FPM_MAX_CHILDREN ${PHP_FPM_MAX_CHILDREN:-20}
+ENV PHP_FPM_START_SERVERS ${PHP_FPM_START_SERVERS:-2}
+ENV PHP_FPM_MIN_SPARE_SERVERS ${PHP_FPM_MIN_SPARE_SERVERS:-1}
+ENV PHP_FPM_MAX_SPARE_SERVERS ${PHP_FPM_MAX_SPARE_SERVERS:-3}
+ENV PHP_FPM_MAX_REQUESTS ${PHP_FPM_MAX_REQUESTS:-1000}
+
 # Define env variables for Xdebug settings
 ENV PHP_XDEBUG_MODE ${PHP_XDEBUG_MODE:-off}
 ENV PHP_XDEBUG_CLIENT_HOST ${PHP_XDEBUG_CLIENT_HOST:-host.docker.internal}
@@ -82,10 +89,14 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 # Copy over PHP Configuration.
 #   Development defaults: https://github.com/php/php-src/blob/master/php.ini-development
 #   Producton defaults: https://github.com/php/php-src/blob/master/php.ini-production
-COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/php.ini $PHP_INI_DIR/php.ini
 COPY php/opcache.ini $PHP_INI_DIR/conf.d/
 COPY php/xdebug.ini $PHP_INI_DIR/conf.d/
+COPY php/fpm.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+
+# Override default entrypoint to enable editing FPM config with env variables
+COPY entrypoint.sh /usr/local/bin/docker-php-entrypoint
+RUN chmod +x /usr/local/bin/docker-php-entrypoint
 
 # Copy over Nginx configuration
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
@@ -95,7 +106,7 @@ COPY nginx/conf.d/ /etc/nginx/conf.d/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Ensure nginx is properly passing to php-fpm and fpm is responding
-HEALTHCHECK --interval=5s --timeout=3s \
+HEALTHCHECK --start-period=5s --timeout=3s --interval=1m \
   CMD curl -f http://localhost/php-fpm-ping || exit 1
 
 WORKDIR /opt/project
