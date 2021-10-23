@@ -15,6 +15,7 @@
 This image is based on official PHP-FPM Docker image.
 
 Additional software:
+
 - Nginx (with pre-made configs for Laravel, Laravel Octane, Symfony and Wordpress)
 - SQLite
 - Composer
@@ -108,9 +109,7 @@ You can set Nginx config suited for your framework using `NGINX_SERVER_TYPE` env
 
 ### Production Usage
 
-If you don't mind the size of the image, it's perfecly suitable for production usage. Just enable opcache and adjust other settings using env variables as described in [configuration section](#configuration).
-
-For advanced scenarios you might need to supply your own `www.conf` file to control the number of child processed created by PHP-FPM based on your load and hardware.
+If you don't mind the size of the image, it's perfectly suitable for production usage. Just enable opcache and adjust other settings using env variables as described in [configuration section](#configuration).
 
 ### Cron Schedule
 
@@ -132,9 +131,9 @@ services:
       - ./:/opt/project:cached
     labels:
       # See https://github.com/mcuadros/ofelia#docker-labels-configurations
-      ofelia.enabled: "true"
-      ofelia.job-exec.schedule.schedule: "@every 60s"
-      ofelia.job-exec.schedule.command: "php artisan schedule:run"
+      ofelia.enabled: 'true'
+      ofelia.job-exec.schedule.schedule: '@every 60s'
+      ofelia.job-exec.schedule.command: 'php artisan schedule:run'
 
   ofelia:
     depends_on:
@@ -171,14 +170,25 @@ services:
 
 ## Configuration
 
-This image ships with the default php.ini for production environments.
+This image ships with the default `php.ini` for production environments.
 
-The only notable change is opcache config, to prevent confusion when running container with unedited settings:
+Default Opcache settings are adjusted with the following values to improve DX:
 
-- `opcache.validate_timestamps` is set to 1 to (should be set to 0 in production)
-- `opcache.revalidate_freq` is set to 0 (should be like this regardless of environment)
+> Make sure you disable `opcache.validate_timestamps` for deployed version of your image.
 
-It is recommended that you change configuration using the following environment variables rather than hardcoding `php.ini` values in the image:
+```ini
+; If enabled, OPcache will check for updated scripts every opcache.revalidate_freq
+; seconds. When this directive is disabled, you must reset OPcache manually
+; by running 'kill -USR2 1' inside the container
+opcache.validate_timestamps=1
+
+; How often to check script timestamps for updates, in seconds. 0 will result
+; in OPcache checking for updates on every request. This configuration
+; directive is ignored if opcache.validate_timestamps is disabled.
+opcache.revalidate_freq=0
+```
+
+You can change configuration using the following environment variables:
 
 | Envitonment Variable                | Default                           |
 | ----------------------------------- | --------------------------------- |
@@ -200,6 +210,16 @@ It is recommended that you change configuration using the following environment 
 | PHP_OPCACHE_SAVE_COMMENTS           | 1                                 |
 | PHP_XDEBUG_MODE                     | off                               |
 | PHP_XDEBUG_CLIENT_HOST              | host.docker.internal              |
+
+You may also tweak process manager settings:
+
+| Envitonment Variable                | Default                           |
+| ----------------------------------- | --------------------------------- |
+| PHP_FPM_MAX_CHILDREN                | 20                                |
+| PHP_FPM_START_SERVERS               | 2                                 |
+| PHP_FPM_MIN_SPARE_SERVERS           | 1                                 |
+| PHP_FPM_MAX_SPARE_SERVERS           | 3                                 |
+| PHP_FPM_MAX_REQUESTS                | 1000                              |
 
 ## Creating Images
 
