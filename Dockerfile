@@ -80,7 +80,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
   && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
 # Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get install -y nodejs \
   && apt-get -y autoremove \
   && apt-get clean \
