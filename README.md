@@ -4,6 +4,7 @@
   - [Introduction](#introduction)
   - [Supported PHP Versions](#supported-php-versions)
   - [Usage](#usage)
+    - [Apple Silicon](#apple-silicon)
     - [Production Usage](#production-usage)
     - [Cron Schedule](#cron-schedule)
     - [Laravel Octane](#laravel-octane)
@@ -106,6 +107,12 @@ You can set Nginx config suited for your framework using `NGINX_SERVER_TYPE` env
 - octane
 - symfony
 - wordpress
+
+### Apple Silicon
+
+This image doesn't **natively** support Apple Silicon, because MySQL doesn't provide [ARM64 version](https://www.mysql.com/support/supportedplatforms/database.html) for Debian which we need in order to install a command-line client.
+
+However, you can add `--platform linux/amd64` to run this image under emulation.
 
 ### Production Usage
 
