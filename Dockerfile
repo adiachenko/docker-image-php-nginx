@@ -2,6 +2,8 @@ FROM php:7.4-fpm-buster
 
 LABEL maintainer="Alexander Diachenko"
 
+ENV SSH_PRIVATE_KEY_BASE64 ${SSH_PRIVATE_KEY_BASE64:-}
+
 # Define env variables for error reporting settings
 ENV PHP_DISPLAY_ERRORS ${PHP_DISPLAY_ERRORS:-Off}
 ENV PHP_DISPLAY_STARTUP_ERRORS ${PHP_DISPLAY_STARTUP_ERRORS:-Off}
@@ -54,6 +56,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get update \
   && apt-get install -y mysql-client postgresql-client \
   && apt-get purge -y lsb-release wget gnupg \
+  && apt-get install -y openssh-client \
+  && mkdir -p $HOME/.ssh && chmod 700 $HOME/.ssh && echo "Host *\n\tStrictHostKeyChecking no\n\n" > $HOME/.ssh/config \
   && docker-php-ext-configure gd --with-jpeg --with-freetype \
   && docker-php-ext-configure intl \
   && docker-php-ext-install bcmath pcntl exif opcache pdo_mysql pdo_pgsql zip gd intl sockets \
