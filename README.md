@@ -82,6 +82,7 @@ zlib
 
 - 7.4 (use `adiachenko/php-nginx:7.4`)
 - 8.0 (use `adiachenko/php-nginx:8.0`)
+- 8.1 (use `adiachenko/php-nginx:8.1`)
 
 ## Usage
 

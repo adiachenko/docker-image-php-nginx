@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-buster
+FROM php:8.1-fpm-buster
 
 LABEL maintainer="Alexander Diachenko"
 
@@ -47,7 +47,7 @@ ENV NGINX_SERVER_TYPE ${NGINX_SERVER_TYPE:-laravel}
 RUN apt-get update && apt-get install -y --no-install-recommends \
   sqlite3 apache2-utils htop nano gettext-base lsb-release wget gnupg nginx supervisor \
   libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev libfreetype6-dev \
-  && curl https://repo.mysql.com/mysql-apt-config_0.8.19-1_all.deb --output mysql-apt-config.deb \
+  && curl https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb --output mysql-apt-config.deb \
   && DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config.deb \
   && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
@@ -57,7 +57,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && docker-php-ext-configure gd --with-jpeg --with-freetype \
   && docker-php-ext-configure intl \
   && docker-php-ext-install bcmath pcntl exif opcache pdo_mysql pdo_pgsql zip gd intl sockets \
-  && yes '' | pecl install redis-5.3.4 \
+  && yes '' | pecl install redis-5.3.7 \
   && docker-php-ext-enable redis \
   && apt-get -y autoremove \
   && apt-get clean \
@@ -68,7 +68,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install Xdebug
-RUN yes '' | pecl install xdebug-3.1.0 && docker-php-ext-enable xdebug
+RUN yes '' | pecl install xdebug-3.1.3 && docker-php-ext-enable xdebug
 
 # Install Blackfire
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
@@ -82,6 +82,8 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get install -y nodejs \
+  && npm install -g yarn \
+  && npm cache clean --force \
   && apt-get -y autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
