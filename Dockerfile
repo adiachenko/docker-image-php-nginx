@@ -47,7 +47,7 @@ ENV NGINX_SERVER_TYPE ${NGINX_SERVER_TYPE:-laravel}
 
 # Install additional tools and PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  sqlite3 apache2-utils htop nano gettext-base lsb-release wget gnupg nginx supervisor \
+  git sqlite3 apache2-utils htop nano gettext-base lsb-release wget gnupg nginx supervisor \
   libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev libfreetype6-dev \
   && curl https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb --output mysql-apt-config.deb \
   && DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config.deb \
