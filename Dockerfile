@@ -48,7 +48,7 @@ ENV NGINX_SERVER_TYPE ${NGINX_SERVER_TYPE:-laravel}
 # Install additional tools and PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git sqlite3 apache2-utils htop nano gettext-base lsb-release wget gnupg nginx supervisor \
-  libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev libfreetype6-dev \
+  libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev libfreetype6-dev libgmp-dev \
   && curl https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb --output mysql-apt-config.deb \
   && DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config.deb \
   && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && mkdir -p $HOME/.ssh && chmod 700 $HOME/.ssh && echo "Host *\n\tStrictHostKeyChecking no\n\n" > $HOME/.ssh/config \
   && docker-php-ext-configure gd --with-jpeg --with-freetype \
   && docker-php-ext-configure intl \
-  && docker-php-ext-install bcmath pcntl exif opcache pdo_mysql pdo_pgsql zip gd intl sockets \
+  && docker-php-ext-install bcmath pcntl exif opcache pdo_mysql pdo_pgsql zip gd intl sockets gmp \
   && yes '' | pecl install redis-5.3.7 \
   && docker-php-ext-enable redis \
   && apt-get -y autoremove \
