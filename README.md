@@ -26,6 +26,7 @@ Additional software:
 - Command-line clients for MySQL and PostgreSQL to support [migration squashing](https://laravel.com/docs/8.x/migrations#squashing-migrations)
 - htop
 - GNU nano
+- Open SSH
 
 Compiled in modules (according to `php -m`):
 
@@ -81,8 +82,9 @@ zlib
 
 ## Supported PHP Versions
 
-- 8.0 (use `adiachenko/php-nginx:8.0`)
 - 8.1 (use `adiachenko/php-nginx:8.1`)
+- 8.2 (use `adiachenko/php-nginx:8.2`)
+- 8.3 (use `adiachenko/php-nginx:8.3`)
 
 ## Usage
 
@@ -118,6 +120,17 @@ However, you can add `--platform linux/amd64` to run this image under emulation.
 ### Production Usage
 
 If you don't mind the size of the image, it's perfectly suitable for production usage. Just enable opcache and adjust other settings using env variables as described in [configuration section](#configuration).
+
+### SSH
+
+In some circumstances when using private Composer packages you may need SSH keys for authentication. I still recommend [using tokens](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-for-privately-hosted-packages-and-repositories) with Docker whenever possible, but if you setup does not allow it, you may provide base64 encoded value of your SSH **private** key (e.g. ~/.ssh/id_rsa) here:
+
+> You can use [online base64 encoder](https://www.base64encode.org) to encode the value. Copy all the text from the `id_rsa` file (including comments and the last empty line).
+> If you still get access denied errors with the key encoded in this manner, ensure that you have an empty line in the end before encoding the value.
+
+```
+CONTAINER_SSH_PRIVATE_KEY_BASE64=
+```
 
 ### Cron Schedule
 
@@ -234,13 +247,13 @@ You may also tweak process manager settings:
 Build images:
 
 ```sh
-docker build --no-cache -t adiachenko/php-nginx:8.1 .
-docker build -t adiachenko/php-nginx:latest .
+docker build --platform linux/amd64 --no-cache -t adiachenko/php-nginx:8.3 .
+docker build --platform linux/amd64 -t adiachenko/php-nginx:latest .
 ```
 
 Push images to Docker Hub:
 
 ```
-docker push adiachenko/php-nginx:8.1
+docker push adiachenko/php-nginx:8.3
 docker push adiachenko/php-nginx:latest
 ```
