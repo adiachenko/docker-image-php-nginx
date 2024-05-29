@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-buster
+FROM php:8.1-fpm-bookworm
 
 LABEL maintainer="Alexander Diachenko"
 
@@ -46,22 +46,35 @@ ENV COMPOSER_MEMORY_LIMIT -1
 ENV NGINX_SERVER_TYPE ${NGINX_SERVER_TYPE:-laravel}
 
 # Install additional tools and PHP extensions
+# Replace mysql-8.0 with mysql-8.4-lts in debconf-set-selections if you want 8.4
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git sqlite3 apache2-utils htop nano gettext-base lsb-release wget gnupg nginx supervisor \
-  libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev libfreetype6-dev libgmp-dev \
-  && curl https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb --output mysql-apt-config.deb \
+  libpq-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev g++ libfreetype6-dev libgmp-dev libxml2-dev \
+  && curl https://repo.mysql.com/mysql-apt-config_0.8.30-1_all.deb --output mysql-apt-config.deb \
+  && echo "mysql-apt-config mysql-apt-config/select-server select mysql-8.0" | debconf-set-selections \
   && DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config.deb \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-  && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && install -d /usr/share/postgresql-common/pgdg \
+  && curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+  && sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
-  && apt-get install -y mysql-client postgresql-client \
+  && apt-get install -y mysql-client postgresql-client-16 \
   && apt-get purge -y lsb-release wget gnupg \
   && apt-get install -y openssh-client \
   && mkdir -p $HOME/.ssh && chmod 700 $HOME/.ssh && echo "Host *\n\tStrictHostKeyChecking no\n\n" > $HOME/.ssh/config \
-  && docker-php-ext-configure gd --with-jpeg --with-freetype \
   && docker-php-ext-configure intl \
-  && docker-php-ext-install bcmath pcntl exif opcache pdo_mysql pdo_pgsql zip gd intl sockets gmp \
-  && yes '' | pecl install redis-5.3.7 \
+  && docker-php-ext-install intl \
+  && docker-php-ext-install bcmath \
+  && docker-php-ext-install pcntl \
+  && docker-php-ext-install exif \
+  && docker-php-ext-install opcache \
+  && docker-php-ext-install pdo_mysql \
+  && docker-php-ext-install pdo_pgsql \
+  && docker-php-ext-install zip \
+  && docker-php-ext-configure gd --with-jpeg --with-freetype \
+  && docker-php-ext-install gd \
+  && docker-php-ext-install sockets \
+  && docker-php-ext-install gmp \
+  && yes '' | pecl install redis-6.0.2 \
   && docker-php-ext-enable redis \
   && apt-get -y autoremove \
   && apt-get clean \
@@ -72,7 +85,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install Xdebug
-RUN yes '' | pecl install xdebug-3.1.3 && docker-php-ext-enable xdebug
+RUN yes '' | pecl install xdebug-3.3.2 && docker-php-ext-enable xdebug
 
 # Install Blackfire
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
@@ -84,7 +97,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
   && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
 # Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
   && apt-get install -y nodejs \
   && npm install -g yarn \
   && npm cache clean --force \
