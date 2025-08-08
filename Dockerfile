@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 LABEL maintainer="Alexander Diachenko"
 
@@ -74,7 +74,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && docker-php-ext-install gd \
   && docker-php-ext-install sockets \
   && docker-php-ext-install gmp \
-  && yes '' | pecl install redis-6.0.2 \
+  && yes '' | pecl install redis-6.2.0 \
   && docker-php-ext-enable redis \
   && apt-get -y autoremove \
   && apt-get clean \
@@ -85,7 +85,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install Xdebug
-RUN yes '' | pecl install xdebug-3.3.2 && docker-php-ext-enable xdebug
+RUN yes '' | pecl install xdebug-3.4.5 && docker-php-ext-enable xdebug
 
 # Install Blackfire
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \

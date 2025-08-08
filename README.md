@@ -85,6 +85,7 @@ zlib
 - 8.1 (use `adiachenko/php-nginx:8.1`)
 - 8.2 (use `adiachenko/php-nginx:8.2`)
 - 8.3 (use `adiachenko/php-nginx:8.3`)
+- 8.4 (use `adiachenko/php-nginx:8.4`)
 
 ## Usage
 
@@ -247,13 +248,13 @@ You may also tweak process manager settings:
 Build images:
 
 ```sh
-docker build --platform linux/amd64 --no-cache -t adiachenko/php-nginx:8.3 .
+docker build --platform linux/amd64 --no-cache -t adiachenko/php-nginx:8.4 .
 docker build --platform linux/amd64 -t adiachenko/php-nginx:latest .
 ```
 
 Push images to Docker Hub:
 
 ```
-docker push adiachenko/php-nginx:8.3
+docker push adiachenko/php-nginx:8.4
 docker push adiachenko/php-nginx:latest
 ```
