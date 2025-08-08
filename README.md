@@ -247,13 +247,11 @@ You may also tweak process manager settings:
 Build images:
 
 ```sh
-docker build --platform linux/amd64 --no-cache -t adiachenko/php-nginx:8.3 .
-docker build --platform linux/amd64 -t adiachenko/php-nginx:latest .
+docker build --platform linux/amd64 --no-cache -t adiachenko/php-nginx:8.2 .
 ```
 
 Push images to Docker Hub:
 
 ```
-docker push adiachenko/php-nginx:8.3
-docker push adiachenko/php-nginx:latest
+docker push adiachenko/php-nginx:8.2
 ```
