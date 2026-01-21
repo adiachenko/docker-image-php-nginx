@@ -82,7 +82,6 @@ zlib
 
 ## Supported PHP Versions
 
-- 8.1 (use `adiachenko/php-nginx:8.1`)
 - 8.2 (use `adiachenko/php-nginx:8.2`)
 - 8.3 (use `adiachenko/php-nginx:8.3`)
 - 8.4 (use `adiachenko/php-nginx:8.4`)
@@ -124,10 +123,9 @@ If you don't mind the size of the image, it's perfectly suitable for production 
 
 ### SSH
 
-In some circumstances when using private Composer packages you may need SSH keys for authentication. I still recommend [using tokens](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-for-privately-hosted-packages-and-repositories) with Docker whenever possible, but if you setup does not allow it, you may provide base64 encoded value of your SSH **private** key (e.g. ~/.ssh/id_rsa) here:
+In some circumstances when using private Composer packages you may need SSH keys for authentication. I recommend [using tokens](https://getcomposer.org/doc/articles/authentication-for-private-packages.md#authentication-for-privately-hosted-packages-and-repositories) with Docker whenever possible, but if your setup does not allow it, you may provide base64 encoded value of your SSH **private** key (e.g. ~/.ssh/id_rsa) here:
 
-> You can use [online base64 encoder](https://www.base64encode.org) to encode the value. Copy all the text from the `id_rsa` file (including comments and the last empty line).
-> If you still get access denied errors with the key encoded in this manner, ensure that you have an empty line in the end before encoding the value.
+> **Clarification**: you must encode the entire value including header, base64 contents of the key, footer and an empty line at the end of the file.
 
 ```
 CONTAINER_SSH_PRIVATE_KEY_BASE64=
