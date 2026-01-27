@@ -1,3 +1,7 @@
+> This image is **deprecated** in favor of [frankenstack](https://github.com/adiachenko/frankenstack)📦. If you need assistance migrating, feel free to reach out.
+> 
+> Frankenstack provides the same core functionality on a modernized stack with improved configurability. 
+
 # Docker PHP-FPM with Nginx
 
 - [Docker PHP-FPM with Nginx](#docker-php-fpm-with-nginx)
